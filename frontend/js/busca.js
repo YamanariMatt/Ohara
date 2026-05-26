@@ -30,9 +30,15 @@ async function buscarLivros(termo, tipo) {
     renderizarResultados(resposta.dados || []);
     showMessage("mensagemBusca", resposta.mensagem, "success");
   } catch (error) {
-    estadoInicial.hidden = false;
-    atualizarEstadoBusca("Busca indisponível", "Tente novamente em instantes ou confirme se o backend está ativo.");
-    showMessage("mensagemBusca", error.message, "error");
+    try {
+      const livros = await buscarDiretoOpenLibrary(termo, tipo);
+      renderizarResultados(livros);
+      showMessage("mensagemBusca", "Busca realizada pela Open Library. O backend continua disponível para salvar livros.", "success");
+    } catch (fallbackError) {
+      estadoInicial.hidden = false;
+      atualizarEstadoBusca("Busca indisponível", "Tente novamente em instantes ou confirme se o backend está ativo.");
+      showMessage("mensagemBusca", error.message, "error");
+    }
   } finally {
     loadingBusca.hidden = true;
   }
@@ -70,6 +76,52 @@ function renderizarResultados(livros) {
 function atualizarEstadoBusca(titulo, texto) {
   estadoInicial.querySelector("h3").textContent = titulo;
   estadoInicial.querySelector("p").textContent = texto;
+}
+
+async function buscarDiretoOpenLibrary(termo, tipo) {
+  const url = montarUrlOpenLibrary(termo, tipo);
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error("A Open Library não respondeu à busca.");
+  }
+
+  const payload = await response.json();
+  return (payload.docs || []).slice(0, 20).map(normalizarLivroOpenLibrary);
+}
+
+function montarUrlOpenLibrary(termo, tipo) {
+  const params = new URLSearchParams({ limit: "20" });
+
+  if (tipo === "titulo") {
+    params.set("title", termo);
+  } else if (tipo === "autor") {
+    params.set("author", termo);
+  } else {
+    params.set("q", termo);
+  }
+
+  return `https://openlibrary.org/search.json?${params.toString()}`;
+}
+
+function normalizarLivroOpenLibrary(documento) {
+  const coverId = documento.cover_i || null;
+  const autores = Array.isArray(documento.author_name) && documento.author_name.length
+    ? documento.author_name.join(", ")
+    : "Autor desconhecido";
+  const isbn = Array.isArray(documento.isbn) && documento.isbn.length
+    ? documento.isbn[0]
+    : null;
+
+  return {
+    titulo: documento.title || "Título desconhecido",
+    autores,
+    ano_publicacao: documento.first_publish_year || null,
+    isbn,
+    cover_id: coverId ? String(coverId) : null,
+    capa_url: coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` : null,
+    openlibrary_key: documento.key || null,
+  };
 }
 
 function renderizarCardBusca(livro, index) {
