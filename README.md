@@ -148,10 +148,12 @@ https://ohara-7u9j.onrender.com/api/saude
 Configuração equivalente no painel do Render:
 
 - Runtime: `Python 3`
-- Root Directory: `backend`
+- Root Directory: deixe em branco ou use `backend`
 - Build Command: `pip install -r requirements.txt`
 - Start Command: `gunicorn app:app`
 - Health Check Path: `/api/saude`
+
+Se o Render estiver configurado para buildar a raiz do repositório, os arquivos `requirements.txt`, `.python-version` e `app.py` da raiz encaminham a execução para o backend em `backend/`. Se preferir configurar `Root Directory: backend`, o backend também continua funcionando diretamente a partir dessa pasta.
 
 ### Persistência Do SQLite No Render
 
