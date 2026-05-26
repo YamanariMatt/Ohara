@@ -103,6 +103,8 @@ Com o backend rodando, abra o arquivo:
 frontend/index.html
 ```
 
+No GitHub Pages, o arquivo `index.html` da raiz redireciona automaticamente para `frontend/index.html`.
+
 O frontend consome a API configurada em `frontend/js/api.js`:
 
 ```javascript
