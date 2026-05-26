@@ -1,11 +1,18 @@
+import logging
+
 import requests
 
 
-OPEN_LIBRARY_SEARCH_URL = "https://openlibrary.org/search.json"
+OPEN_LIBRARY_SEARCH_URLS = (
+    "https://openlibrary.org/search.json",
+    "http://openlibrary.org/search.json",
+)
 COVER_URL_TEMPLATE = "https://covers.openlibrary.org/b/id/{cover_id}-L.jpg"
 REQUEST_HEADERS = {
     "User-Agent": "Ohara/1.0 (https://ohara-7u9j.onrender.com)",
 }
+
+logger = logging.getLogger(__name__)
 
 
 class OpenLibraryError(Exception):
@@ -49,16 +56,22 @@ def buscar_livros(termo, tipo_busca="geral", limite=20):
     else:
         parametros["q"] = termo
 
-    try:
-        resposta = requests.get(
-            OPEN_LIBRARY_SEARCH_URL,
-            params=parametros,
-            headers=REQUEST_HEADERS,
-            timeout=(10, 30),
-        )
-        resposta.raise_for_status()
-    except requests.RequestException as exc:
-        raise OpenLibraryError("Nao foi possivel consultar a Open Library.") from exc
+    ultima_excecao = None
+    for url in OPEN_LIBRARY_SEARCH_URLS:
+        try:
+            resposta = requests.get(
+                url,
+                params=parametros,
+                headers=REQUEST_HEADERS,
+                timeout=(10, 30),
+            )
+            resposta.raise_for_status()
+            break
+        except requests.RequestException as exc:
+            ultima_excecao = exc
+            logger.warning("Falha ao consultar Open Library em %s: %s", url, exc)
+    else:
+        raise OpenLibraryError("Nao foi possivel consultar a Open Library.") from ultima_excecao
 
     try:
         dados = resposta.json()
