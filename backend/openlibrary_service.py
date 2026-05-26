@@ -3,6 +3,9 @@ import requests
 
 OPEN_LIBRARY_SEARCH_URL = "https://openlibrary.org/search.json"
 COVER_URL_TEMPLATE = "https://covers.openlibrary.org/b/id/{cover_id}-L.jpg"
+REQUEST_HEADERS = {
+    "User-Agent": "Ohara/1.0 (https://ohara-7u9j.onrender.com)",
+}
 
 
 class OpenLibraryError(Exception):
@@ -50,7 +53,8 @@ def buscar_livros(termo, tipo_busca="geral", limite=20):
         resposta = requests.get(
             OPEN_LIBRARY_SEARCH_URL,
             params=parametros,
-            timeout=10,
+            headers=REQUEST_HEADERS,
+            timeout=(10, 30),
         )
         resposta.raise_for_status()
     except requests.RequestException as exc:
