@@ -1,6 +1,6 @@
-# Biblioteca Vitoriana
+# Ohara
 
-Sistema de biblioteca local com backend em Python Flask, banco SQLite e frontend responsivo em HTML, CSS e JavaScript puro. A aplicação consome a API pública da Open Library para buscar livros reais, permite salvar obras em um acervo local, cadastrar usuários, registrar empréstimos, devolver livros e consultar indicadores da biblioteca.
+Ohara é um sistema de biblioteca local com backend em Python Flask, banco SQLite e frontend responsivo em HTML, CSS e JavaScript puro. A aplicação consome a API pública da Open Library para buscar livros reais, permite salvar obras em um acervo local, cadastrar usuários, registrar empréstimos, devolver livros e consultar indicadores da biblioteca.
 
 O visual do frontend combina uma estética vitoriana elegante com usabilidade moderna: tons de papel antigo, madeira escura, vinho, dourado envelhecido, cards ornamentados discretos e tipografia serifada nos títulos.
 
@@ -10,6 +10,7 @@ O visual do frontend combina uma estética vitoriana elegante com usabilidade mo
 - Flask
 - flask-cors
 - requests
+- gunicorn
 - SQLite
 - HTML
 - CSS
@@ -41,6 +42,7 @@ O visual do frontend combina uma estética vitoriana elegante com usabilidade mo
 │   ├── app.py
 │   ├── database.py
 │   ├── openlibrary_service.py
+│   ├── .python-version
 │   ├── requirements.txt
 │   └── biblioteca.db
 ├── frontend/
@@ -61,6 +63,7 @@ O visual do frontend combina uma estética vitoriana elegante com usabilidade mo
 │   └── assets/
 │       └── README.txt
 ├── .gitignore
+├── render.yaml
 └── README.md
 ```
 
@@ -103,8 +106,64 @@ frontend/index.html
 O frontend consome a API configurada em `frontend/js/api.js`:
 
 ```javascript
-const API_BASE_URL = "http://localhost:5000/api";
+const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+const RENDER_API_BASE_URL = "https://ohara-7u9j.onrender.com/api";
 ```
+
+Em `localhost`, o frontend usa o backend local. Em GitHub Pages ou outro domínio, ele usa a API publicada no Render.
+
+## Deploy Do Backend No Render
+
+O arquivo `render.yaml` na raiz prepara o backend para deploy como Web Service no Render:
+
+```yaml
+services:
+  - type: web
+    name: ohara
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /api/saude
+```
+
+URL atual do backend:
+
+```text
+https://ohara-7u9j.onrender.com
+```
+
+ID do serviço no Render:
+
+```text
+srv-d8aq7i37uimc73am638g
+```
+
+Endpoint de saúde:
+
+```text
+https://ohara-7u9j.onrender.com/api/saude
+```
+
+Configuração equivalente no painel do Render:
+
+- Runtime: `Python 3`
+- Root Directory: `backend`
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `gunicorn app:app`
+- Health Check Path: `/api/saude`
+
+### Persistência Do SQLite No Render
+
+Por padrão, o filesystem do Render é efêmero. Isso significa que o SQLite pode perder dados em redeploys ou reinícios se ficar salvo dentro da pasta do projeto.
+
+O backend aceita a variável de ambiente `DATABASE_PATH`. Para persistência real, adicione um disco persistente no Render e configure:
+
+```text
+DATABASE_PATH=/var/data/biblioteca.db
+```
+
+Use `/var/data` como mount path do disco persistente. Sem disco persistente, o backend funciona para demonstração, mas os dados locais não devem ser tratados como permanentes.
 
 ## Integração Com A Open Library
 

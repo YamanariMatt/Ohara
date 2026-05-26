@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
+import os
 from pathlib import Path
 import sqlite3
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "biblioteca.db"
+DB_PATH = Path(os.environ.get("DATABASE_PATH", BASE_DIR / "biblioteca.db"))
 
 
 def agora_iso():
@@ -12,6 +13,7 @@ def agora_iso():
 
 
 def get_connection():
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")

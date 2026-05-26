@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -20,7 +22,7 @@ def criar_app():
 
     @app.get("/api/saude")
     def saude():
-        return sucesso({"status": "online"}, "Backend da Biblioteca Vitoriana ativo.")
+        return sucesso({"status": "online"}, "Backend do Ohara ativo.")
 
     @app.get("/api/livros/buscar")
     def buscar_livros_open_library():
@@ -417,4 +419,6 @@ app = criar_app()
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug)

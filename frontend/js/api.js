@@ -1,4 +1,10 @@
-const API_BASE_URL = "http://localhost:5000/api";
+const LOCAL_API_BASE_URL = "http://localhost:5000/api";
+const RENDER_API_BASE_URL = "https://ohara-7u9j.onrender.com/api";
+
+const API_BASE_URL = window.BIBLIOTECA_API_BASE_URL
+  || (["localhost", "127.0.0.1"].includes(window.location.hostname)
+    ? LOCAL_API_BASE_URL
+    : RENDER_API_BASE_URL);
 
 async function apiRequest(endpoint, options = {}) {
   const config = {
@@ -17,7 +23,7 @@ async function apiRequest(endpoint, options = {}) {
   try {
     response = await fetch(`${API_BASE_URL}${endpoint}`, config);
   } catch (error) {
-    throw new Error("Não foi possível conectar ao backend. Verifique se o Flask está rodando em http://localhost:5000.");
+    throw new Error(`Não foi possível conectar ao backend em ${API_BASE_URL}.`);
   }
 
   let payload;
