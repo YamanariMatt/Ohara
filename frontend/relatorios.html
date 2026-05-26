@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios | Biblioteca Vitoriana</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Biblioteca Vitoriana">
+      <span class="brand-mark">BV</span>
+      <span>Biblioteca Vitoriana</span>
+    </a>
+    <nav class="nav-menu" aria-label="Menu principal">
+      <a href="index.html">Busca</a>
+      <a href="biblioteca.html">Biblioteca</a>
+      <a href="usuarios.html">Usuários</a>
+      <a href="emprestimos.html">Empréstimos</a>
+      <a class="active" href="relatorios.html">Relatórios</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="content-shell">
+        <p class="eyebrow">Indicadores</p>
+        <h1>Relatórios</h1>
+      </div>
+    </section>
+
+    <section class="content-band">
+      <div class="content-shell">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Visão geral</p>
+            <h2>Resumo da biblioteca</h2>
+          </div>
+          <button class="button-secondary" type="button" id="btnAtualizarRelatorio">Atualizar</button>
+        </div>
+        <div class="message-area" id="mensagemRelatorios" role="status" aria-live="polite"></div>
+        <div class="report-grid" id="cardsRelatorio"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/relatorios.js"></script>
+</body>
+</html>

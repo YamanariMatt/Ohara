@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Vitoriana</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Biblioteca Vitoriana">
+      <span class="brand-mark">BV</span>
+      <span>Biblioteca Vitoriana</span>
+    </a>
+    <nav class="nav-menu" aria-label="Menu principal">
+      <a class="active" href="index.html">Busca</a>
+      <a href="biblioteca.html">Biblioteca</a>
+      <a href="usuarios.html">Usuários</a>
+      <a href="emprestimos.html">Empréstimos</a>
+      <a href="relatorios.html">Relatórios</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="content-shell hero-grid">
+        <div>
+          <p class="eyebrow">Catálogo clássico conectado à Open Library</p>
+          <h1>Biblioteca Vitoriana</h1>
+          <p class="hero-copy">Busque obras reais, preserve seus achados em uma biblioteca local e acompanhe empréstimos com elegância acadêmica.</p>
+        </div>
+        <form class="search-panel" id="formBusca">
+          <label for="termoBusca">Buscar livros</label>
+          <div class="search-row">
+            <input id="termoBusca" name="termoBusca" type="search" placeholder="Digite título, autor ou termo" autocomplete="off" required>
+            <button type="submit">Buscar</button>
+          </div>
+          <fieldset class="segmented-control" aria-label="Tipo de busca">
+            <label>
+              <input type="radio" name="tipoBusca" value="geral" checked>
+              <span>Geral</span>
+            </label>
+            <label>
+              <input type="radio" name="tipoBusca" value="titulo">
+              <span>Título</span>
+            </label>
+            <label>
+              <input type="radio" name="tipoBusca" value="autor">
+              <span>Autor</span>
+            </label>
+          </fieldset>
+        </form>
+      </div>
+    </section>
+
+    <section class="content-band">
+      <div class="content-shell">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Open Library</p>
+            <h2>Resultados da busca</h2>
+          </div>
+          <div class="loading" id="loadingBusca" hidden>Consultando catálogo...</div>
+        </div>
+        <div class="message-area" id="mensagemBusca" role="status" aria-live="polite"></div>
+        <div class="book-grid" id="resultadosBusca"></div>
+        <div class="empty-state" id="estadoInicial">
+          <h3>Procure por um livro para começar</h3>
+          <p>Os resultados aparecerão aqui com capa, autoria, ano e ISBN quando disponíveis.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/busca.js"></script>
+</body>
+</html>
