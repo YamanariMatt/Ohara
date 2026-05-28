@@ -1,5 +1,7 @@
 # Ohara
 
+https://yamanarimatt.github.io/Ohara/frontend/index.html
+
 Ohara é um sistema de biblioteca local com backend em Python Flask, banco SQLite e frontend responsivo em HTML, CSS e JavaScript puro. A aplicação consome a API pública da Open Library para buscar livros reais, permite salvar obras em um acervo local, cadastrar usuários, registrar empréstimos, devolver livros e consultar indicadores da biblioteca.
 
 O visual do frontend combina uma estética vitoriana elegante com usabilidade moderna: tons de papel antigo, madeira escura, vinho, dourado envelhecido, cards ornamentados discretos e tipografia serifada nos títulos.
